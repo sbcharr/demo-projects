@@ -1,4 +1,4 @@
-package concurrency.webpageindexer;
+package com.github.sbcharr.concurrency.webpageindexer;
 
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;

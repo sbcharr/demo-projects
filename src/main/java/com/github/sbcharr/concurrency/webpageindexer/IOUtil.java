@@ -1,4 +1,4 @@
-package concurrency.webpageindexer;
+package com.github.sbcharr.concurrency.webpageindexer;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;

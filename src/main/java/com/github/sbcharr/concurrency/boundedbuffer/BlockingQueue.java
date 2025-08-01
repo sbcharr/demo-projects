@@ -1,4 +1,4 @@
-package concurrency.boundedbuffer;
+package com.github.sbcharr.concurrency.boundedbuffer;
 
 public class BlockingQueue<T> {
     private final T[] queue;

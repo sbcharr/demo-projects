@@ -1,4 +1,4 @@
-package concurrency.webpageindexer;
+package com.github.sbcharr.concurrency.webpageindexer;
 
 import javax.annotation.Nullable;
 import java.io.IOException;
