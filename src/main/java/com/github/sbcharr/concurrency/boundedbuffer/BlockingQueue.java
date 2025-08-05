@@ -1,5 +1,7 @@
 package com.github.sbcharr.concurrency.boundedbuffer;
 
+import java.util.concurrent.TimeUnit;
+
 public class BlockingQueue<T> {
     private final T[] queue;
     private int size;
@@ -17,7 +19,10 @@ public class BlockingQueue<T> {
         this.capacity = capacity;
     }
 
-    public void enqueue(T item) throws InterruptedException {
+    public void enqueue(T item) throws InterruptedException, NullPointerException {
+        if (item == null) {
+            throw new NullPointerException("null item not allowed");
+        }
         synchronized (lock) {
             while (size == capacity) {
                 lock.wait();
@@ -44,9 +49,7 @@ public class BlockingQueue<T> {
             return item;
         }
     }
-}
 
-class AppMain {
     public static void main(String[] args) throws InterruptedException {
         BlockingQueue<Integer> queue = new BlockingQueue<>(10);
         Thread t1 = new Thread(() -> {
@@ -63,8 +66,8 @@ class AppMain {
         Thread t2 = new Thread(() -> {
             for (int i = 0; i < 15; i++) {
                 try {
-                    queue.dequeue();
-                    System.out.println("thread 2 dequeued -> " + i);
+                    Integer item = queue.dequeue();
+                    System.out.println("thread 2 dequeued -> " + item);
                 } catch (InterruptedException ex) {
                     System.out.println("exception: " + ex.getMessage());
                 }
@@ -74,8 +77,8 @@ class AppMain {
         Thread t3 = new Thread(() -> {
             for (int i = 0; i < 10; i++) {
                 try {
-                    queue.dequeue();
-                    System.out.println("thread 3 dequeued -> " + i);
+                    Integer item = queue.dequeue();
+                    System.out.println("thread 3 dequeued -> " + item);
                 } catch (InterruptedException ex) {
                     System.out.println("exception: " + ex.getMessage());
                 }
@@ -83,11 +86,11 @@ class AppMain {
         });
 
         t1.start();
-        Thread.sleep(3000);
+        TimeUnit.SECONDS.sleep(2);
         t2.start();
-        t2.join();
         t3.start();
         t1.join();
+        t2.join();
         t3.join();
     }
 }
