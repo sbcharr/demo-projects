@@ -1,4 +1,4 @@
-package com.github.sbcharr;
+package com.github.sbcharr.lrucache;
 
 import java.util.HashMap;
 import java.util.Map;
