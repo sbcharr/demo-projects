@@ -1,26 +1,26 @@
 package com.github.sbcharr.examples;
 
-// Example: Bank Account with Different Locks (Bad Practice)
+// Example: Bank Account with non-volatile 'balance' (Bad Practice)
 class BankAccount {
     private int balance = 0; // shared mutable state
-
-    private final Object depositLock = new Object();
-    private final Object withdrawLock = new Object();
+    private final Object lock = new Object();
 
     public void deposit(int amount) {
-        synchronized (depositLock) {
+        synchronized (lock) {
             balance += amount;
         }
     }
 
     public void withdraw(int amount) {
-        synchronized (withdrawLock) {
+        synchronized (lock) {
             balance -= amount;
         }
     }
 
     public int getBalance() {
-        return balance;
+        synchronized (lock) {
+            return balance;
+        }
     }
 }
 
@@ -52,9 +52,9 @@ public class LockDemo {
 // Expected output: 0
 // Possible output: Any random number, because both threads update balance without mutual exclusion.
 
-// Correct Approach: Use the "Same Lock"
+// Correct Approach: Use 'volatile' for visibility of the shared mutable state
 class SafeBankAccount {
-    private int balance = 0;
+    private volatile int balance = 0;
     private final Object lock = new Object();
 
     public void deposit(int amount) {
@@ -75,7 +75,7 @@ class SafeBankAccount {
         }
     }
 }
-// Now `deposit()` and `withdraw()` can not run at the same time on `balance`.
+// Now `deposit()` and `withdraw()` will get a consistent view of `balance`.
 
 
 
